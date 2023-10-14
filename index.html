@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+        crossorigin="anonymous"
+    >
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <title>Home</title>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Navbar</a>
+            <button
+                class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+            >
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Link</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a
+                            class="nav-link dropdown-toggle"
+                            href="#"
+                            role="button"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
+                        >
+                            Dropdown
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">Stochastic Training of GNNs</a></li>
+                            <li><a class="dropdown-item" href="#">Training on CPUs</a></li>
+                            <li><a class="dropdown-item" href="#">dgl.DGLGraph</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">Search</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <h1>Graph Diffusion in Graph Neural Networks</h1>
+    <h5>This tutorial first briefly introduces the diffusion process on graphs. It then illustrates how Graph Neural Networks can utilize this concept to enhance prediction power.</h5>
+
+    <div id="code-container">
+        <pre>
+            <code>
+                # Install required packages.
+                import os
+                import torch
+                os.environ['TORCH'] = torch.__version__
+                os.environ['DGLBACKEND'] = "pytorch"
+
+                # Uncomment below to install required packages. If the CUDA version is not 11.8,
+                # check the https://www.dgl.ai/pages/start.html to find the supported CUDA
+                # version and corresponding command to install DGL.
+                #!pip install dgl -f https://data.dgl.ai/wheels/cu118/repo.html > /dev/null
+                #!pip install --upgrade scipy networkx > /dev/null
+
+                try:
+                    import dgl
+                    installed = True
+                except ImportError:
+                    installed = False
+                print("DGL installed!" if installed else "Failed to install DGL!")
+            </code>
+        </pre>
+        <button id="copy-button">Copy</button>
+    </div>
+
+        <h2>Graph Diffusion</h2>
+<h5>
+    <p>Diffusion describes the process of substances moving from one region to another. In the context of a graph, diffusing substances (e.g., real-value signals) travel along edges from node to node.</p>
+    
+    <p>Mathematically, let <em>𝑥⃗</em> be the vector of node signals. A graph diffusion operation can be defined as:</p>
+    
+    <p>𝑦⃗ = 𝐴̃ <em>𝑥⃗</em>,</p>
+    
+    <p>where 𝐴̃  is the diffusion matrix, typically derived from the adjacency matrix of the graph. The selection of diffusion matrices may vary, but the diffusion matrix is typically sparse, and 𝐴̃ <em> 𝑥⃗</em> results in a sparse-dense matrix multiplication.</p>
+    
+    <p>Let's understand it with a simple example. First, we obtain the adjacency matrix of the famous Karate Club Network.</p>
+</h5>
+
+<div id="code-container">
+    <pre>
+        <code>
+            import dgl
+            import dgl.sparse as dglsp
+            from dgl.data import KarateClubDataset
+
+            # Get the graph from DGL's builtin dataset.
+            dataset = KarateClubDataset()
+            dgl_g = dataset[0]
+
+            # Get its adjacency matrix.
+            indices = torch.stack(dgl_g.edges())
+            N = dgl_g.num_nodes()
+            A = dglsp.spmatrix(indices, shape=(N, N))
+            print(A.to_dense()) 
+        </code>
+    </pre>
+    <button id="copy-button">Copy</button>
+</div>
+
+        
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+            crossorigin="anonymous">
+    </script>
+    <script>
+        const copyButton = document.getElementById("copy-button");
+        const codeSnippet = document.querySelector("code");
+
+        copyButton.addEventListener("click", () => {
+            // Create a text area to hold the code
+            const textArea = document.createElement("textarea");
+            textArea.value = codeSnippet.textContent;
+
+            // Append the text area to the document
+            document.body.appendChild(textArea);
+
+            // Select the text in the text area and copy it to the clipboard
+            textArea.select();
+            document.execCommand("copy");
+
+            // Remove the text area
+            document.body.removeChild(textArea);
+
+            // Change the button text to indicate a successful copy
+            copyButton.innerText = "Copied!";
+            setTimeout(() => {
+                copyButton.innerText = "Copy";
+            }, 1500);
+        });
+    </script>
+</body>
+</html>
