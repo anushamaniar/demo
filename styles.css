@@ -1,16 +1,29 @@
-
 #code-container {
     position: relative;
     border: 1px solid #ccc;
     padding: 10px;
     background-color: #f7f7f7;
     margin: 20px;
+    display: flex;
+
 }
 
-#copy-button {
+.copy-button {
     position: absolute;
     top: 10px;
     right: 10px;
+    border-radius: 5px;
+    padding: 7px 10px;
+    background-color: #023e8a;
+    color: #fff;
+    text-decoration: none;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    display: inline-block;
+    margin: 10px;
+
 }
 
 h1, h2, h5 {
@@ -18,7 +31,77 @@ h1, h2, h5 {
     margin: 20px;
 }
 
-.tilde-above {
-    position: relative;
-    top: -0.5em; /* Adjust the value to your desired positioning */
+.custom-navbar {
+    background-color: #023e8a; 
+}
+.dropdown-item:hover {
+    background-color: #023e8a;
+    color: #f1faee; 
+
+}
+.nav-link{
+    color: #f1faee; 
+}
+.navbar-brand{
+    color: #f1faee;
+}
+.button-container {
+    display: flex;
+    justify-content: center; /* Adjust to your preference for spacing */
+}
+.centered-container {
+    width: 80%; /* 25% space on each side */
+    margin: 0 auto; /* Center horizontally */
+    text-align: left; /* Align text to the left */
   }
+.colab-button {
+    width: 12%;
+    padding: 10px 28px;
+    background-color: #023e8a;
+    color: #fff;
+    text-decoration: none;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    display: inline-block;
+    margin: 10px;
+}
+.github-button {
+    width: 12%;
+    padding: 10px 28px;
+    background-color: #023e8a;
+    color: #fff;
+    text-decoration: none;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    display: inline-block;
+    margin: 10px;
+}
+
+.colab-button:hover {
+    background-color: #0a0908;
+}
+.github-button:hover {
+    background-color: #0a0908;
+}
+.c1{
+    font-style: italic;
+    color: #5c987c;
+}
+.kn, .k, .kc{
+    font-weight: bold;
+    color: green;
+}
+.nn{
+    font-weight: bold;
+    color: blue;
+}
+.s1,.s2{
+    color: red;
+}
+.nb{
+    color: green;
+}
