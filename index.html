@@ -13,9 +13,9 @@
     <title>Home</title>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <nav class="navbar navbar-expand-lg custom-navbar">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">Navbar</a>
+            <a class="navbar-brand" href="#">CS229</a>
             <button
                 class="navbar-toggler"
                 type="button"
@@ -30,10 +30,10 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Home</a>
+                        <a class="nav-link" aria-current="page" href="#">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Link</a>
+                        <a class="nav-link" href="#">Getting Started</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a
@@ -43,85 +43,117 @@
                             data-bs-toggle="dropdown"
                             aria-expanded="false"
                         >
-                            Dropdown
+                            Advanced Material
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Stochastic Training of GNNs</a></li>
+                            <li><a class="dropdown-item" href="#">Introduction to DGL</a></li>
                             <li><a class="dropdown-item" href="#">Training on CPUs</a></li>
-                            <li><a class="dropdown-item" href="#">dgl.DGLGraph</a></li>
+                            <li><a class="dropdown-item" href="#">Training on Multiple GPUs</a></li>
+                            <li><a class="dropdown-item" href="#">Stochastic Training of GNNs</a></li>
+                            <li><a class="dropdown-item" href="#">Distributed Training</a></li>
+                            <li><a class="dropdown-item" href="#">Paper Study with DGL</a></li>
+                            <li><a class="dropdown-item" href="#">Resources</a></li>
                         </ul>
                     </li>
                 </ul>
                 <form class="d-flex" role="search">
                     <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success" type="submit">Search</button>
+                    <button class="btn btn-outline-info" type="submit">Search</button>
                 </form>
             </div>
         </div>
     </nav>
 
     <h1>Graph Diffusion in Graph Neural Networks</h1>
+    <div class="centered-container">
     <h5>This tutorial first briefly introduces the diffusion process on graphs. It then illustrates how Graph Neural Networks can utilize this concept to enhance prediction power.</h5>
+    </div>
+    <div class="button-container">
+        <a href="https://colab.research.google.com/github/dmlc/dgl/blob/master/notebooks/sparse/graph_diffusion.ipynb" target="_blank" class="colab-button">Open in Colab</a>
+        <a href="https://github.com/dmlc/dgl/blob/master/notebooks/sparse/graph_diffusion.ipynb" target="_blank" class="github-button">View in Github</a>
+    </div>
+    
 
     <div id="code-container">
-        <pre>
+        <pre id="codecell1">
             <code>
-                # Install required packages.
-                import os
-                import torch
-                os.environ['TORCH'] = torch.__version__
-                os.environ['DGLBACKEND'] = "pytorch"
-
-                # Uncomment below to install required packages. If the CUDA version is not 11.8,
-                # check the https://www.dgl.ai/pages/start.html to find the supported CUDA
-                # version and corresponding command to install DGL.
-                #!pip install dgl -f https://data.dgl.ai/wheels/cu118/repo.html > /dev/null
-                #!pip install --upgrade scipy networkx > /dev/null
-
-                try:
-                    import dgl
-                    installed = True
-                except ImportError:
-                    installed = False
-                print("DGL installed!" if installed else "Failed to install DGL!")
+            <span class="c1"># Install required packages.</span>
+            <span class="kn">import</span> <span class="nn">os</span>
+            <span class="kn">import</span> <span class="nn">torch</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">'TORCH'</span><span class="p">]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">__version__</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">'DGLBACKEND'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"pytorch"</span>
+            
+            <span class="c1"># Uncomment below to install required packages. If the CUDA version is not 11.8,</span>
+            <span class="c1"># check the https://www.dgl.ai/pages/start.html to find the supported CUDA</span>
+            <span class="c1"># version and corresponding command to install DGL.</span>
+            <span class="c1">#!pip install dgl -f https://data.dgl.ai/wheels/cu118/repo.html &gt; /dev/null</span>
+            <span class="c1">#!pip install --upgrade scipy networkx &gt; /dev/null</span>
+            
+            <span class="k">try</span><span class="p">:</span>
+                <span class="kn">import</span> <span class="nn">dgl</span>
+                <span class="n">installed</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+                <span class="n">installed</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">"DGL installed!"</span> <span class="k">if</span> <span class="n">installed</span> <span class="k">else</span> <span class="s2">"Failed to install DGL!"</span><span class="p">)</span>
             </code>
-        </pre>
-        <button id="copy-button">Copy</button>
+            </pre>
+        <button class="copy-button">Copy</button>
     </div>
 
+
         <h2>Graph Diffusion</h2>
+        <div class="centered-container">
 <h5>
+    
     <p>Diffusion describes the process of substances moving from one region to another. In the context of a graph, diffusing substances (e.g., real-value signals) travel along edges from node to node.</p>
-    
     <p>Mathematically, let <em>𝑥⃗</em> be the vector of node signals. A graph diffusion operation can be defined as:</p>
-    
-    <p>𝑦⃗ = 𝐴̃ <em>𝑥⃗</em>,</p>
-    
-    <p>where 𝐴̃  is the diffusion matrix, typically derived from the adjacency matrix of the graph. The selection of diffusion matrices may vary, but the diffusion matrix is typically sparse, and 𝐴̃ <em> 𝑥⃗</em> results in a sparse-dense matrix multiplication.</p>
-    
+    <p>𝑦⃗ = Ã <em>𝑥⃗</em>,</p>
+    <p>where Ã  is the diffusion matrix, typically derived from the adjacency matrix of the graph. The selection of diffusion matrices may vary, but the diffusion matrix is typically sparse, and Ã <em> 𝑥⃗</em> results in a sparse-dense matrix multiplication.</p>
     <p>Let's understand it with a simple example. First, we obtain the adjacency matrix of the famous Karate Club Network.</p>
 </h5>
+</div>
 
 <div id="code-container">
-    <pre>
+    <pre id="codecell3">
         <code>
-            import dgl
-            import dgl.sparse as dglsp
-            from dgl.data import KarateClubDataset
-
-            # Get the graph from DGL's builtin dataset.
-            dataset = KarateClubDataset()
-            dgl_g = dataset[0]
-
-            # Get its adjacency matrix.
-            indices = torch.stack(dgl_g.edges())
-            N = dgl_g.num_nodes()
-            A = dglsp.spmatrix(indices, shape=(N, N))
-            print(A.to_dense()) 
-        </code>
+        <span class="kn">import</span> <span class="nn">dgl</span>
+        <span class="kn">import</span> <span class="nn">dgl.sparse</span> <span class="k">as</span> <span class="nn">dglsp</span>
+        <span class="kn">from</span> <span class="nn">dgl.data</span> <span class="kn">import</span> <span class="n">KarateClubDataset</span>
+        
+        <span class="c1"># Get the graph from DGL's builtin dataset.</span>
+        <span class="n">dataset</span> <span class="o">=</span> <span class="n">KarateClubDataset</span><span class="p">()</span>
+        <span class="n">dgl_g</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        
+        <span class="c1"># Get its adjacency matrix.</span>
+        <span class="n">indices</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">dgl_g</span><span class="o">.</span><span class="n">edges</span><span class="p">())</span>
+        <span class="n">N</span> <span class="o">=</span> <span class="n">dgl_g</span><span class="o">.</span><span class="n">num_nodes</span><span class="p">()</span>
+        <span class="n">A</span> <span class="o">=</span> <span class="n">dglsp</span><span class="o">.</span><span class="n">spmatrix</span><span class="p">(</span><span class="n">indices</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">N</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">to_dense</span><span class="p">())</span>
+    </code>    
     </pre>
-    <button id="copy-button">Copy</button>
+    <button class="copy-button">Copy</button>
 </div>
+<div>
+    <pre id="codecell4">
+        Output:
+        <span></span>
+        tensor([[0., 1., 1.,  ..., 1., 0., 0.],
+        [1., 0., 1.,  ..., 0., 0., 0.],
+        [1., 1., 0.,  ..., 0., 1., 0.],
+        ...,
+        [1., 0., 0.,  ..., 0., 1., 1.],
+        [0., 0., 1.,  ..., 1., 0., 1.],
+        [0., 0., 0.,  ..., 1., 1., 0.]])
+</pre>
+</div>
+<div class="centered-container">
+    <h5>
+    <p>We use the graph convolution matrix from Graph Convolution Networks as the diffusion matrix in this example. The graph convolution matrix is defined as:</p>
+    <p>Ã = 𝐷̄<sup>-1/2</sup>𝐴𝐷̄<sup>-1/2</sup></p>
+    <p>with 𝐴̄ = 𝐴 + 𝐼, where 𝐴 denotes the adjacency matrix and 𝐼 denotes the identity matrix, 𝐷̄ refers to the diagonal node degree matrix of 𝐴̄.</p>
+</h5>
+</div>
+
 
         
 
@@ -130,30 +162,61 @@
             crossorigin="anonymous">
     </script>
     <script>
-        const copyButton = document.getElementById("copy-button");
-        const codeSnippet = document.querySelector("code");
+        // const copyButton = document.getElementById("copy-button");
+        // const codeSnippet = document.querySelector("code");
 
+        // copyButton.addEventListener("click", () => {
+        //     // Create a text area to hold the code
+        //     const textArea = document.createElement("textarea");
+        //     textArea.value = codeSnippet.textContent;
+
+        //     // Append the text area to the document
+        //     document.body.appendChild(textArea);
+
+        //     // Select the text in the text area and copy it to the clipboard
+        //     textArea.select();
+        //     document.execCommand("copy");
+
+        //     // Remove the text area
+        //     document.body.removeChild(textArea);
+
+        //     // Change the button text to indicate a successful copy
+        //     copyButton.innerText = "Copied!";
+        //     setTimeout(() => {
+        //         copyButton.innerText = "Copy";
+        //     }, 1500);
+        // });
+            // Get all elements with the class "copy-button"
+            const copyButtons = document.querySelectorAll(".copy-button");
+
+// Add event listeners for each copy button
+        copyButtons.forEach(copyButton => {
         copyButton.addEventListener("click", () => {
-            // Create a text area to hold the code
-            const textArea = document.createElement("textarea");
-            textArea.value = codeSnippet.textContent;
+        // Find the code snippet associated with the clicked button
+        const codeSnippet = copyButton.previousElementSibling.querySelector("code");
 
-            // Append the text area to the document
-            document.body.appendChild(textArea);
+        // Create a text area to hold the code
+        const textArea = document.createElement("textarea");
+        textArea.value = codeSnippet.textContent;
 
-            // Select the text in the text area and copy it to the clipboard
-            textArea.select();
-            document.execCommand("copy");
+        // Append the text area to the document
+        document.body.appendChild(textArea);
 
-            // Remove the text area
-            document.body.removeChild(textArea);
+        // Select the text in the text area and copy it to the clipboard
+        textArea.select();
+        document.execCommand("copy");
 
-            // Change the button text to indicate a successful copy
-            copyButton.innerText = "Copied!";
-            setTimeout(() => {
-                copyButton.innerText = "Copy";
-            }, 1500);
-        });
+        // Remove the text area
+        document.body.removeChild(textArea);
+
+        // Change the button text to indicate a successful copy
+        copyButton.innerText = "Copied!";
+        setTimeout(() => {
+            copyButton.innerText = "Copy";
+        }, 1500);
+    });
+});
     </script>
 </body>
 </html>
+
